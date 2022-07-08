@@ -14,6 +14,7 @@ const tank ={
     x : Math.floor(board.width/2),
     y : Math.floor(board.height/2)+(board.height/3),
     display : "⁂",
+    hp : 1,
 }
 
 const bullet = {
@@ -32,7 +33,6 @@ const enemy = {
     x : 10,
     y : 10,
     hp : 5,
-    
 }
 const SPACE = "ㆍ";
 const FPS = "50";
@@ -43,8 +43,8 @@ const boardArr = new Array(board.height).fill(board.value).map(()=> new Array(bo
 function shootBullet(){
     boardArr[bullet.y][bullet.x] = bullet.value;
     bullet.y -= 1;
-    //hit!
-    hit(bullet.x, bullet.y);
+    //hit! enemy!
+    hitEnemy(bullet.x, bullet.y);
     if (bullet.y == 0){
         bullet.isShoot = false;
         bullet.y = tank.y - Math.floor(tank.height/2);
@@ -53,7 +53,7 @@ function shootBullet(){
 }
 
 //hit! and bullet 사라지기!
-function hit(x, y){
+function hitEnemy(x, y){
     if (y-1 >0) {
     	if (boardArr[y-1][x] == enemy.value){
         	bullet.y = 0;
@@ -61,12 +61,31 @@ function hit(x, y){
     	}
     }
 }
-// 기체의 변화에 따른 배열 초기화!
+// hit my Tank,, ㅜㅜ 
+function hitTank(x, y){
+    /*
+    for(let i=y+Math.floor(tank.height/2); i >= y-Math.floor(tank.height/2); i--){
+        for(let j=x-Math.floor(tank.width/2); j <= x+Math.floor(tank.width/2); j++){
+    		if (boardArr[y][x] == enemy.value){
+        		tank.hp -= 1;
+        		if (tank.hp === 0) {
+            		console.log('end!');
+        		}
+    		}
+        }
+    }*/
+    console.log(boardArr[y][x]);
+    if (boardArr[y+1][x+1] == enemy.value){
+        console.log("nn");
+    }
+}
+// 기체의 변화에 따른 배열 초기화! (tank, enemy, board)
 function setTank(x, y, eX, eY){
     for(let i=0; i<board.height; i++){
         for(let j=0; j<board.width; j++){
             if (i <= y+Math.floor(tank.height/2) && i> y-Math.floor(tank.height/2) && j >= x-Math.floor(tank.width/2) && j <x+Math.floor(tank.width/2)){
 	            boardArr[i][j] = tank.value;
+                // hp 다 닳으면 없어지도록!
             } else if (enemy.hp >0 &&i <= eY + Math.floor(enemy.height/2) && i > eY - Math.floor(enemy.height/2) && j >= eX-Math.floor(enemy.width/2) && j < eX+Math.floor(enemy.width/2)){
                 boardArr[i][j] = enemy.value;
                 
@@ -75,6 +94,7 @@ function setTank(x, y, eX, eY){
             }
         }
     }
+    hitTank(x, y);
 }
 // Start Game!
 function setBoard(){
@@ -127,10 +147,12 @@ function loadBoard(){
 // 게임실행
 function inGame(){
     setTank(tank.x, tank.y, enemy.x, enemy.y);
+    
     // shooting!!
     if (bullet.isShoot){
         shootBullet();
     }
+    enemyMove();
     loadBoard();
 
 }
@@ -162,6 +184,31 @@ function tankAttack(event){
     }
 }
 
+// enemy의 움직임! // 개빠름
+function enemyMove(){
+    const movePattern = Math.floor(Math.random()*10 % 4);
+    const moveLength = Math.floor(Math.random()*10 % 2) + 1;
+    if (movePattern == 0) { //up
+        if (enemy.y - Math.floor(enemy.height/2) > 0){
+            enemy.y -= moveLength;
+        }
+    } else if (movePattern == 1) { // right
+        if (enemy.x + Math.floor(enemy.width/2) < board.width) {
+            enemy.x += moveLength;
+        }
+    } else if (movePattern == 2) {
+        if (enemy.y + Math.floor(enemy.height/2) < board.height-2) {
+            enemy.y += moveLength;
+        }
+    } else if (movePattern == 3) {
+        if (enemy.x - Math.floor(enemy.width/2) > 0) {
+            enemy.x -= moveLength;
+        }
+    }
+}
+
+// level design // enemy die -> new enemy 
+//function level
 start.addEventListener("click", setBoard);
 document.addEventListener("keydown", tankMove);
 document.addEventListener("keydown", tankAttack);
