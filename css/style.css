@@ -4,3 +4,7 @@ p {
 .hidden {
     display : none;
 }
+
+tr {
+    line-height : 150%;
+}

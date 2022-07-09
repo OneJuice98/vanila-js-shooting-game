@@ -16,21 +16,35 @@ function tankRange(){
     return [xRange, yRange];
 }
 
-// set tank!
-/*
-function setTank(x, y){
-    for(let i=0; i<board.height; i++){
-        for(let j=0; j<board.width; j++){
-            
+// 잔상제거를 위한 함수, 작동원리는 display 와 동일
+function removeTank(){
+    const range = tankRange();
+    const tr = document.querySelectorAll('tr');
+    for(let i=range[1][0]; i<range[1][1]; i++){
+        const td = tr[i].querySelectorAll('td');
+        for(let j=range[0][0]; j<range[0][1]; j++){
+            td[j].innerText = SPACE_VALUE;
         }
     }
-}
-*/
 
+}
+// tank display! 
+function displayTank(){
+    const range = tankRange();
+    const tr = document.querySelectorAll('tr');
+    for(let i=range[1][0]; i<range[1][1]; i++){
+        const td = tr[i].querySelectorAll('td');
+        for(let j=range[0][0]; j<range[0][1]; j++){
+            td[j].innerText = tank.display;
+        }
+    }
+    
+}
 
 // tank의 움직임!
 function tankMove(event){
     const range = tankRange();
+    removeTank(range);
     if (event.keyCode === 38) { //Up
         if (range[1][0] > 1 ){
             tank.y -= 1;

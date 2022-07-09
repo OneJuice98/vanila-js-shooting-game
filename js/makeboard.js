@@ -12,6 +12,7 @@ const board = {
 
 const SPACE_VALUE = "ㆍ"; // background
 const FRAME_VALUE = "━"; // frame
+let isBoard = false // 보드 생성여부
 
 // html에 board 그리기!
 function setBoard(){
@@ -20,20 +21,6 @@ function setBoard(){
     // className 설정으로 CSS 설정 미부여 game-board display
     gameBoard.className = "";
     
-    /*
-    // for loop로 한줄마다 repeat를 통해 그리기
-    for(let i=0; i<board.height; i++){
-        const line = document.createElement("p");
-        // id 가 필요한가? <추가 확인필요> ---------------------------------------------------
-        line.id = i;
-        if (i===0 || i===board.height-1){
-            line.innerText = FRAME_VALUE.repeat(board.width);
-        } else {
-            line.innerText = `${SPACE_VALUE}`.repeat(board.width);
-        }
-        gameBoard.appendChild(line);
-    }
-    */
     const table = document.createElement("table");
     for(let i=0; i<board.height; i++){
         const line = document.createElement("tr");
@@ -45,6 +32,9 @@ function setBoard(){
         table.appendChild(line);
     }
     gameBoard.appendChild(table);
+    // 보드 생성여부 확인을 위한 return 값
+    isBoard = true;
+    return isBoard;
 }
 
 startGame.addEventListener('click', setBoard);
