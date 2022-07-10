@@ -34,6 +34,7 @@ function setBoard(){
             } else {
             	block.innerText = `${SPACE_VALUE}`;
             }
+            block.value = board.value;
 
             line.appendChild(block);
         }
@@ -45,4 +46,27 @@ function setBoard(){
     return isBoard;
 }
 
-startGame.addEventListener('click', setBoard);
+function loadBoard(){
+    for(let i=0; i<board.height; i++){
+        // board 내 line 생성
+        const line = document.querySelectorAll('tr');
+        for(let j=0; j<board.width; j++){
+            const block = line[i].querySelectorAll('td');
+            if (i === 0 || i === board.height-1) {
+                block[j].innerText = FRAME_VALUE[0];
+            } else {
+                if (block[j].value === tank.value){
+                    block[j].innerText = tank.display;
+                } else if (block[j].value === bullet.value){
+                    block[j].innerText = bullet.display; 
+                } else if (block[j].value === enemy1.value){
+                    block[j].innerText = enemy1.display;
+                } else if (block[j].value === enemy2.value){
+                    block[j].innerText = enemy2.display;
+                } else {
+                    block[j].innerText = SPACE_VALUE;
+                }
+            }
+        }
+    }
+}

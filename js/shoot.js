@@ -5,7 +5,7 @@ const bullet = {
     count : 3,
 }
 
-// bullet display!
+// bullet display! -> 이부분이 진짜 개맘에 안듦 ㅠㅠㅠ 맘에 안듦(1)
 function displayBullet(event){
     if (event.keyCode === 32 && bullet.count > 0){
     	// bullet 수 조절 
@@ -18,22 +18,41 @@ function displayBullet(event){
         let count = 0;
         for(let i=bulletY; i>=0 ; i--){
             const td = tr[i].querySelectorAll('td');
-            // 위로올라가는 느낌살리기 위한 closure
             setTimeout(function(){
                 td[bulletX].innerText = bullet.display;
-                if (i!==bulletY){
-                	const lastTd = tr[i+1].querySelectorAll('td');
-                	lastTd[bulletX].innerText = SPACE_VALUE;
-                    // 끝에 도달하면 사라짐.
-                    if (i === 0){
-                        td[bulletX].innerText = FRAME_VALUE[0];
-                    	bullet.count += 1
-                	}
+                const lastPosition = tr[i+1].querySelectorAll('td');
+                // 끝에 도달시!!
+                if (i === 0){
+                    td[bulletX].innerText = FRAME_VALUE[0];
+                    bullet.count += 1;
+                } 
+                // 잔상 제거!
+                if (i !== bulletY){
+                    lastPosition[bulletX].innerText = SPACE_VALUE;
+                    if (i !== 0 && tr[i-1].querySelectorAll('td')[bulletX].value >= enemy1.value){
+                        td[bulletX].innerText = SPACE_VALUE;
+                    } 
                 }
-            }, bullet.speed * count);
-            count += 1;
+
+            }, bullet.speed*count);
+            // 피격시!
+            if (i !== 0 && tr[i-1].querySelectorAll('td')[bulletX].value === enemy1.value){
+                bullet.count += 1;
+                // 다시 살아나길래 hp가 0보다 클때만 준다!
+                if (enemy1.hp > 0){
+                    enemy1.hp -= 1;
+                }
+                break; 
+            }
+            if (i !== 0 && tr[i-1].querySelectorAll('td')[bulletX].value === enemy2.value){
+                bullet.count += 1;
+                // 다시 살아나길래 hp가 0보다 클때만 준다!
+                if (enemy2.hp > 0){
+                    enemy2.hp -= 1;
+                }
+                break; 
+            }
+        	count += 1;
         }
     }
 }    
-
-
