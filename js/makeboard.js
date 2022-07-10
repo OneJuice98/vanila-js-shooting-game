@@ -11,7 +11,7 @@ const board = {
 }
 
 const SPACE_VALUE = "ㆍ"; // background
-const FRAME_VALUE = "━"; // frame
+const FRAME_VALUE = ["━", "|"]; // frame
 let isBoard = false // 보드 생성여부
 
 // html에 board 그리기!
@@ -26,7 +26,15 @@ function setBoard(){
         const line = document.createElement("tr");
         for(let j=0; j<board.width; j++){
             const block = document.createElement("td");
-            block.innerText = `${SPACE_VALUE}`;
+            // frame space 마다 다른 value
+            if (i === 0 || i === board.height-1){ 
+                block.innerText = `${FRAME_VALUE[0]}`;
+            } else if (j === 0 || j === board.width-1){
+                block.innerText = `${FRAME_VALUE[1]}`;  
+            } else {
+            	block.innerText = `${SPACE_VALUE}`;
+            }
+
             line.appendChild(block);
         }
         table.appendChild(line);
